@@ -54,6 +54,8 @@ The "Inception" project comes with a Makefile that provides various commands to 
 
 - **Custom Website**: A custom website container is provided to test other web applications or static websites. Developers can deploy their custom projects and access them at port 3000.
 
+- **cAdvisor**: cAdvisor (Container Advisor) is an open-source container monitoring tool developed by Google. It collects and exports detailed resource usage and performance statistics for each container running on the host. By using cAdvisor, developers and system administrators can gain insights into container performance, resource utilization, and overall health. The cAdvisor service is configured to expose its metrics via a web interface on port 9443, allowing users to monitor and analyze container metrics in real-time. It complements the monitoring capabilities of other services in the stack, providing valuable information for optimizing containerized applications and ensuring their efficient operation.
+
 ## Project Structure:
 The "Inception" project has the following directory structure:
 
@@ -73,7 +75,7 @@ inception/
   │   │   ├── ftp/
   │   │   ├── adminer/
   │   │   ├── website/
-  │   │   └── portainer/
+  │   │   └── cadvisor/
   │   └── requirements/
   │       ├── tools/
   │       │   ├── script.sh
