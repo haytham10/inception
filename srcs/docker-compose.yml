@@ -112,17 +112,19 @@ services:
       - inception
     restart: always
 
-  portainer:
+  cadvisor:
     build:
-      context: ./requirements/bonus/portainer
+      context: ./requirements/bonus/cadvisor
       dockerfile: Dockerfile
-    image: portainer
-    container_name: portainer
+    image: cadvisor
+    container_name: cadvisor
     ports:
       - "9443:9443"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - portainer-data:/data
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker:/var/lib/docker:ro"
     networks:
       - inception
     restart: always
@@ -139,12 +141,6 @@ volumes:
       o: bind
       type: none
       device: /home/${USER}/data/mariadb
-
-  portainer-data:
-    driver_opts:
-      o: bind
-      type: none
-      device: /home/${USER}/data/portainer
 
 networks:
   inception:
