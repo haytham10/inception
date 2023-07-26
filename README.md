@@ -16,7 +16,7 @@ To get started with Inception, follow these steps:
 
 3. Configure Environment Variables:
 
-    Create a .env file in the srcs/ directory and set your desired environment variables.
+    You can create a .env file in the srcs/ directory and set your desired environment variables.
 
 
 4. Start the Environment:
@@ -38,6 +38,21 @@ The "Inception" project comes with a Makefile that provides various commands to 
 - **make re**: Rebuild the "Inception" environment.
 - **make clean**: Clean up the "Inception" environment and delete unused Docker resources.
 - **make fclean**: Perform a total cleaning, stopping all containers and removing all Docker resources.
+
+## Services and Explanations
+- **Nginx**: The Nginx service acts as a reverse proxy and web server, handling incoming requests and directing them to the appropriate backend services. It provides SSL/TLS termination and is configured to serve static content efficiently.
+
+- **WordPress**: WordPress is a popular content management system (CMS) for building and managing websites. It is used to create dynamic and customizable websites. The WordPress service is connected to the MariaDB service to store data.
+
+- **MariaDB**: MariaDB is a robust and reliable open-source relational database management system. It serves as the database backend for WordPress, storing all website data and content.
+
+- **Redis**: Redis is an in-memory data structure store, used as a caching layer to improve WordPress performance. It helps reduce the load on the database and speeds up repetitive operations.
+
+- **FTP**: The FTP service allows developers to transfer files between their local machines and the web server. It enables easy file management for the web application.
+
+- **Adminer**: Adminer is a full-featured database management tool that provides a web-based interface to manage the MariaDB database. It offers a convenient way to interact with the database for administration purposes.
+
+- **Custom Website**: A custom website container is provided to test other web applications or static websites. Developers can deploy their custom projects and access them at port 3000.
 
 ## Project Structure:
 The "Inception" project has the following directory structure:
