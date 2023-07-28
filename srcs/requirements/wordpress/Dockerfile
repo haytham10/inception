@@ -4,6 +4,10 @@ FROM debian:stable
 ARG MYSQL_DATABASE
 ARG MYSQL_USER
 ARG MYSQL_PASSWORD
+ARG WP_ADMIN_USER
+ARG WP_ADMIN_PASSWORD
+ARG WP_USER_NAME
+ARG WP_USER_PASSWORD
 ARG VERSION=7.4
 
 # Set the working directory to /var/www
@@ -31,6 +35,15 @@ COPY ./tools/script.sh .
 
 # Grant execute permission to the script and execute it
 RUN chmod +x script.sh && ./script.sh
+
+# Copy the setup-admin-user.sh script to the container
+COPY setup-admin-user.sh /var/www/html/wp-content/my-plugins/
+
+# Give execution permission to the script during the build process
+RUN chmod +x /var/www/html/wp-content/my-plugins/setup-admin-user.sh
+
+# Run the setup-admin-user.sh script during the container build
+RUN /var/www/html/wp-content/my-plugins/setup-admin-user.sh
 
 # Set the command to start PHP-FPM
 CMD ["/usr/sbin/php-fpm7.4", "-F"]

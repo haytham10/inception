@@ -45,6 +45,10 @@ services:
         MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         MYSQL_USER: ${MYSQL_USER}
         MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        WP_ADMIN_USER: ${WP_ADMIN_USER}
+        WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
+        WP_USER_NAME: ${WP_USER_NAME}
+        WP_USER_PASSWORD: ${WP_USER_PASSWORD}
     image: wordpress
     container_name: wordpress
     depends_on:
