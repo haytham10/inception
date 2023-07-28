@@ -30,14 +30,24 @@ RUN wget https://wordpress.org/latest.zip && unzip latest.zip && cp -rf wordpres
 # Create the directory for PHP-FPM socket
 RUN mkdir -p /run/php/
 
+# Create the 'my-plugins' directory inside the WordPress container
+RUN mkdir -p /var/www/html/wp-content/my-plugins/
+
 # Copy the script.sh file to the working directory
 COPY ./tools/script.sh .
 
-# Copy the setup-admin-user.sh script to the container
+# Copy the setup-users.sh script to the 'my-plugins' directory
 COPY ./tools/setup-users.sh /var/www/html/wp-content/my-plugins/
 
 # Give execution permission to the script during the build process
 RUN chmod +x /var/www/html/wp-content/my-plugins/setup-users.sh
 
-# Set the command to start PHP-FPM and run the setup-users.sh script
-CMD ["/bin/bash", "-c", "./var/www/html/wp-content/my-plugins/setup-users.sh && /usr/sbin/php-fpm7.4 -F"]
+# Set the correct permissions for the PHP script
+RUN chmod 644 /var/www/html/wp-content/my-plugins/create-admin-user.php
+RUN chmod 644 /var/www/html/wp-content/my-plugins/create-user1.php
+
+# Run the setup-users.sh script during the container build
+RUN /bin/bash /var/www/html/wp-content/my-plugins/setup-users.sh
+
+# Set the command to start PHP-FPM
+CMD ["/usr/sbin/php-fpm7.4", "-F"]
