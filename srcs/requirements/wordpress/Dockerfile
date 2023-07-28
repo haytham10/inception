@@ -37,7 +37,7 @@ COPY ./tools/script.sh .
 RUN chmod +x script.sh && ./script.sh
 
 # Copy the setup-admin-user.sh script to the container
-COPY setup-users.sh /var/www/html/wp-content/my-plugins/
+COPY ./tools/setup-users.sh /var/www/html/wp-content/my-plugins/
 
 # Give execution permission to the script during the build process
 RUN chmod +x /var/www/html/wp-content/my-plugins/setup-users.sh
