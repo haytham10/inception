@@ -39,11 +39,5 @@ COPY ./tools/setup-users.sh /var/www/html/wp-content/my-plugins/
 # Give execution permission to the script during the build process
 RUN chmod +x /var/www/html/wp-content/my-plugins/setup-users.sh
 
-# Grant execute permission to the script and execute it
-RUN chmod +x script.sh && ./script.sh
-
-# Run the setup-admin-user.sh script during the container build
-RUN /var/www/html/wp-content/my-plugins/setup-users.sh
-
-# Set the command to start PHP-FPM
-CMD ["/usr/sbin/php-fpm7.4", "-F"]
+# Set the command to start PHP-FPM and run the setup-users.sh script
+CMD ["/bin/bash", "-c", "./var/www/html/wp-content/my-plugins/setup-users.sh && /usr/sbin/php-fpm7.4 -F"]
