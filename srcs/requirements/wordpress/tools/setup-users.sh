@@ -5,9 +5,6 @@ ADMIN_USERNAME="$WP_ADMIN_USER" # Get the admin username from the environment va
 ADMIN_PASSWORD="$WP_ADMIN_PASS" # Get the admin password from the environment variable
 ADMIN_EMAIL="owner@inception.com" # Replace with your desired email address
 
-# Create a my-plugins directory
-mkdir -p /var/www/html/wp-content/my-plugins
-
 # Create a PHP script to create the admin user dynamically
 cat <<EOF > /var/www/html/wp-content/my-plugins/create-admin-user.php
 <?php
