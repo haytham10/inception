@@ -16,6 +16,9 @@ WORKDIR /var/www
 # Update and upgrade the package repositories and install required packages
 RUN apt update -y && apt upgrade -y && apt install -y wget unzip gnupg2 lsb-release
 
+# Install WP CLI to manage WordPress from the command line
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
+
 # Add the ondrej/php repository and install PHP and its extensions
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
     && echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list \
@@ -30,24 +33,17 @@ RUN wget https://wordpress.org/latest.zip && unzip latest.zip && cp -rf wordpres
 # Create the directory for PHP-FPM socket
 RUN mkdir -p /run/php/
 
-# Create the 'my-plugins' directory inside the WordPress container
-RUN mkdir -p /var/www/html/wp-content/my-plugins/
-
 # Copy the script.sh file to the working directory
 COPY ./tools/script.sh .
 
-# Copy the setup-users.sh script to the 'my-plugins' directory
-COPY ./tools/setup-users.sh /var/www/html/wp-content/my-plugins/
+# Copy the setup-admin-user.sh script to the container
+COPY ./tools/setup-users.sh .
 
-# Give execution permission to the script during the build process
-RUN chmod +x /var/www/html/wp-content/my-plugins/setup-users.sh
+# Grant execute permission to the script and execute it
+RUN chmod +x script.sh && ./script.sh
 
-# Set the correct permissions for the PHP script
-RUN chmod 644 /var/www/html/wp-content/my-plugins/create-admin-user.php
-RUN chmod 644 /var/www/html/wp-content/my-plugins/create-user1.php
-
-# Run the setup-users.sh script during the container build
-RUN /bin/bash /var/www/html/wp-content/my-plugins/setup-users.sh
+# Run the setup-admin-user.sh script during the container build
+RUN chmod +x ./setup-users.sh && ./setup-users.sh
 
 # Set the command to start PHP-FPM
 CMD ["/usr/sbin/php-fpm7.4", "-F"]
