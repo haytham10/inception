@@ -8,16 +8,13 @@ ARG WP_ADMIN_USER
 ARG WP_ADMIN_PASSWORD
 ARG WP_USER_NAME
 ARG WP_USER_PASSWORD
-ARG VERSION=7.4
+ARG VERSION=8.2
 
 # Set the working directory to /var/www
 WORKDIR /var/www
 
 # Update and upgrade the package repositories and install required packages
 RUN apt update -y && apt upgrade -y && apt install -y wget unzip gnupg2 lsb-release
-
-# Install WP CLI to manage WordPress from the command line
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
 # Add the ondrej/php repository and install PHP and its extensions
 RUN wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg \
@@ -30,20 +27,22 @@ RUN sed -i "s|listen = /run/php/php${VERSION}-fpm.sock|listen = 9000|g" /etc/php
 # Download and set up WordPress in the working directory
 RUN wget https://wordpress.org/latest.zip && unzip latest.zip && cp -rf wordpress/* . && rm -rf wordpress latest.zip && rm -rf wp-config-sample.php && chmod -R 777 *
 
+# Download and install wp-cli
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
+
 # Create the directory for PHP-FPM socket
 RUN mkdir -p /run/php/
 
 # Copy the script.sh file to the working directory
 COPY ./tools/script.sh .
 
-# Copy the setup-admin-user.sh script to the container
-COPY ./tools/setup-users.sh .
-
 # Grant execute permission to the script and execute it
 RUN chmod +x script.sh && ./script.sh
 
-# Run the setup-admin-user.sh script during the container build
-RUN chmod +x ./setup-users.sh && ./setup-users.sh
+# Create the WordPress database and user
+RUN wp core install --url=localhost --title="INCEPTION" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=owner@example.com --allow-root
+
+RUN wp user create ${WP_USER_NAME} --user_email=user1@example.com --user_pass=${WP_USER_PASSWORD} --role=author --allow-root
 
 # Set the command to start PHP-FPM
-CMD ["/usr/sbin/php-fpm7.4", "-F"]
+CMD ["/usr/sbin/php-fpm${VERSION}", "-F"]
