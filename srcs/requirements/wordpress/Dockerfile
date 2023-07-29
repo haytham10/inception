@@ -8,7 +8,7 @@ ARG WP_ADMIN_USER
 ARG WP_ADMIN_PASSWORD
 ARG WP_USER_NAME
 ARG WP_USER_PASSWORD
-ARG VERSION=8.2
+ARG VERSION=7.4
 
 # Set the working directory to /var/www
 WORKDIR /var/www
@@ -39,10 +39,11 @@ COPY ./tools/script.sh .
 # Grant execute permission to the script and execute it
 RUN chmod +x script.sh && ./script.sh
 
-# Create the WordPress database and user
-RUN wp core install --url=localhost --title="INCEPTION" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=owner@example.com --allow-root
+# COPY setup-users script to the working directory
+COPY ./tools/setup-users.sh .
 
-RUN wp user create ${WP_USER_NAME} --user_email=user1@example.com --user_pass=${WP_USER_PASSWORD} --role=author --allow-root
+# Grant execute permission to the script and execute it
+RUN chmod +x setup-users.sh && ./setup-users.sh
 
 # Set the command to start PHP-FPM
 CMD ["/usr/sbin/php-fpm${VERSION}", "-F"]
