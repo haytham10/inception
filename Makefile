@@ -4,6 +4,7 @@ all:
 	@printf "Starting ${NAME} ...\n"
 	@sh ./srcs/requirements/tools/script.sh
 	@docker-compose -f ./srcs/docker-compose.yml --env-file ./srcs/.env up -d
+	@docker exec --env-file ./srcs/.env wordpress /var/www/setup-users.sh
 
 build:
 	@printf "Building ${NAME} ...\n"

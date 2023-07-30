@@ -43,7 +43,7 @@ RUN chmod +x script.sh && ./script.sh
 COPY ./tools/setup-users.sh .
 
 # Grant execute permission to the script and execute it
-RUN chmod +x setup-users.sh && ./setup-users.sh
+RUN chmod +x setup-users.sh
 
 # Set the command to start PHP-FPM
-CMD ["/usr/sbin/php-fpm${VERSION}", "-F"]
+CMD ["/usr/sbin/php-fpm7.4", "-F"]
